@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">WBPO_fake_users</string>
+    <string name="password_text">Password</string>
+    <string name="username_text">Username</string>
+    <string name="registration_title_text">Registration</string>
+    <string name="logo_desc">Logo</string>
+    <string name="register_button_text">Register</string>
 </resources>
