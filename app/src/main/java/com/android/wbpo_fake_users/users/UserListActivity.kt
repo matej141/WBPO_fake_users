@@ -1,108 +1,78 @@
 package com.android.wbpo_fake_users.users
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageButton
+import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.android.wbpo_fake_users.databinding.ActivityUserListBinding
-import com.android.wbpo_fake_users.users.adapters.UsersListRecyclerViewAdapter
-import com.android.wbpo_fake_users.users.retrofit.models.User
+import com.android.wbpo_fake_users.users.adapters.UserListRecyclerViewAdapter
 
 class UserListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityUserListBinding
+    private val viewModel: UserListViewModel by viewModels()
+    private lateinit var adapter: UserListRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUserListBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val users = listOf(
-            User(
-                id = 1,
-                email = "john.doe@example.com",
-                firstName = "John",
-                lastName = "Doe",
-                avatar = "https://example.com/avatars/johndoe.jpg"
-            ),
-            User(
-                id = 2,
-                email = "jane.smith@example.com",
-                firstName = "Jane",
-                lastName = "Smith",
-                avatar = "https://example.com/avatars/janesmith.jpg"
-            ),
-            User(
-                id = 3,
-                email = "alice.jones@example.com",
-                firstName = "Alice",
-                lastName = "Jones",
-                avatar = "https://example.com/avatars/alicejones.jpg"
-            ),
-            User(
-                id = 4,
-                email = "bob.brown@example.com",
-                firstName = "Bob",
-                lastName = "Brown",
-                avatar = "https://example.com/avatars/bobbrown.jpg"
-            ),
-            User(
-                id = 5,
-                email = "carol.wilson@example.com",
-                firstName = "Carol",
-                lastName = "Wilson",
-                avatar = "https://example.com/avatars/carolwilson.jpg"
-            ),
-            User(
-                id = 6,
-                email = "dave.davis@example.com",
-                firstName = "Dave",
-                lastName = "Davis",
-                avatar = "https://example.com/avatars/davedavis.jpg"
-            ),
-            User(
-                id = 7,
-                email = "eve.evans@example.com",
-                firstName = "Eve",
-                lastName = "Evans",
-                avatar = "https://example.com/avatars/eveevans.jpg"
-            ),
-            User(
-                id = 8,
-                email = "frank.thomas@example.com",
-                firstName = "Frank",
-                lastName = "Thomas",
-                avatar = "https://example.com/avatars/frankthomas.jpg"
-            ),
-            User(
-                id = 9,
-                email = "grace.moore@example.com",
-                firstName = "Grace",
-                lastName = "Moore",
-                avatar = "https://example.com/avatars/gracemoore.jpg"
-            ),
-            User(
-                id = 10,
-                email = "henry.clark@example.com",
-                firstName = "Henry",
-                lastName = "Clark",
-                avatar = "https://example.com/avatars/henryclark.jpg"
-            )
-        )
 
-        binding.recyclerView.adapter = UsersListRecyclerViewAdapter(users) { item, button ->
-            createOnClickListener(
-                item,
-                button
-            )
+        setupAdapter()
+        observeUsers()
+        observeLoadingValue()
+        observeErrorMessage()
+
+        addOnScrollListenerToRecyclerView()
+    }
+
+    private fun observeLoadingValue() {
+        viewModel.loading.observe(this, Observer { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        })
+    }
+
+    private fun observeErrorMessage() {
+        viewModel.error.observe(this, Observer { error ->
+            error?.let {
+                Toast.makeText(this, "Error: $it", Toast.LENGTH_LONG).show()
+            }
+        })
+    }
+
+    private fun setupAdapter() {
+        adapter = UserListRecyclerViewAdapter()
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+
+    }
+
+    private fun observeUsers() {
+        viewModel.users.observe(this) { users ->
+            adapter.setUsers(users)
         }
     }
 
-    private fun createOnClickListener(item: User, button: ImageButton) {
-        val onClickListener = View.OnClickListener {
+    private fun addOnScrollListenerToRecyclerView() {
+        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val visibleItemCount = layoutManager.childCount
+                val totalItemCount = layoutManager.itemCount
+                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
-
-        }
-
+                if (!viewModel.loading.value!! && (visibleItemCount + firstVisibleItemPosition) >=
+                    totalItemCount && firstVisibleItemPosition >= 0
+                ) {
+                    viewModel.loadNextPage()
+                }
+            }
+        })
     }
 }
 
