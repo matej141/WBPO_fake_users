@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wbpo_fake_users.databinding.ActivityUserListBinding
@@ -31,17 +30,17 @@ class UserListActivity : AppCompatActivity() {
     }
 
     private fun observeLoadingValue() {
-        viewModel.loading.observe(this, Observer { isLoading ->
+        viewModel.loading.observe(this) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-        })
+        }
     }
 
     private fun observeErrorMessage() {
-        viewModel.error.observe(this, Observer { error ->
+        viewModel.error.observe(this) { error ->
             error?.let {
                 Toast.makeText(this, "Error: $it", Toast.LENGTH_LONG).show()
             }
-        })
+        }
     }
 
     private fun setupAdapter() {
