@@ -1,6 +1,7 @@
 package com.android.wbpo_fake_users.register
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -47,9 +48,15 @@ class RegisterActivity : AppCompatActivity() {
                     "Registration successful! Token: ${it.token}",
                     Toast.LENGTH_LONG
                 ).show()
+                saveDataIntoSharedPreferences()
                 // startUsersListActivity()
             }
         }
+    }
+
+    private fun saveDataIntoSharedPreferences() {
+        val sharedPreferences: SharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
+        sharedPreferences.edit().putBoolean("is_registered", true).apply()
     }
 
     private fun observeLoadingValue() {

@@ -13,6 +13,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val sharedPreferences: SharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
+        // sharedPreferences.edit().putBoolean("is_registered", false).apply()
         val isRegistered = sharedPreferences.getBoolean("is_registered", false)
 
         if (isRegistered) {
