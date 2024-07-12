@@ -5,4 +5,7 @@
     <string name="registration_title_text">Registration</string>
     <string name="logo_desc">Logo</string>
     <string name="register_button_text">Register</string>
+    <string name="favorite_button_desc">Favorite</string>
+    <string name="users_text">Users</string>
+    <string name="avatar_image_desc">User\'s avatar</string>
 </resources>
