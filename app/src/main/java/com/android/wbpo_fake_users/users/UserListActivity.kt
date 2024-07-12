@@ -4,17 +4,17 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
-import com.android.wbpo_fake_users.databinding.ActivityUsersListBinding
+import com.android.wbpo_fake_users.databinding.ActivityUserListBinding
 import com.android.wbpo_fake_users.users.adapters.UsersListRecyclerViewAdapter
 import com.android.wbpo_fake_users.users.retrofit.models.User
 
-class UsersListActivity : AppCompatActivity() {
+class UserListActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityUsersListBinding
+    private lateinit var binding: ActivityUserListBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityUsersListBinding.inflate(layoutInflater)
+        binding = ActivityUserListBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val users = listOf(
             User(

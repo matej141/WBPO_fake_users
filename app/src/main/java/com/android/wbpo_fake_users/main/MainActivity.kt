@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.android.wbpo_fake_users.register.RegisterActivity
-import com.android.wbpo_fake_users.users.UsersListActivity
+import com.android.wbpo_fake_users.users.UserListActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         val isRegistered = sharedPreferences.getBoolean("is_registered", false)
 
         if (isRegistered) {
-            startActivity(Intent(this, UsersListActivity::class.java))
+            startActivity(Intent(this, UserListActivity::class.java))
         } else {
             startActivity(Intent(this, RegisterActivity::class.java))
         }

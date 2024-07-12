@@ -46,7 +46,7 @@
         app:layout_constraintTop_toBottomOf="@id/users_title"
         app:layout_constraintVertical_bias="0.0"
         android:foreground="@drawable/recycler_view_foreground_shape"
-        tools:listitem="@layout/users_list_item"
+        tools:listitem="@layout/user_list_item"
         android:clipToPadding="false"
         android:paddingBottom="120dp"/>
 

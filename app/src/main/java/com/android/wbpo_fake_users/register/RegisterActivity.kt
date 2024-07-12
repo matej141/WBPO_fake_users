@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.android.wbpo_fake_users.databinding.ActivityRegisterBinding
-import com.android.wbpo_fake_users.users.UsersListActivity
+import com.android.wbpo_fake_users.users.UserListActivity
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -35,7 +35,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun startUsersListActivity() {
-        val intent = Intent(this, UsersListActivity::class.java)
+        val intent = Intent(this, UserListActivity::class.java)
         startActivity(intent)
         finish()
     }
@@ -49,7 +49,7 @@ class RegisterActivity : AppCompatActivity() {
                     Toast.LENGTH_LONG
                 ).show()
                 saveDataIntoSharedPreferences()
-                // startUsersListActivity()
+                startUsersListActivity()
             }
         }
     }
