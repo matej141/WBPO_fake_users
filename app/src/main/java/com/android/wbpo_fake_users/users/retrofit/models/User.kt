@@ -1,9 +1,11 @@
 package com.android.wbpo_fake_users.users.retrofit.models
 
+import com.google.gson.annotations.SerializedName
+
 data class User(
-    var id: Int = 0,
-    var email: String = "",
-    var firstName: String = "",
-    var lastName: String = "",
-    var avatar: String = ""
+    val id: Int,
+    val email: String,
+    @SerializedName("first_name") val firstName: String,
+    @SerializedName("last_name") val lastName: String,
+    val avatar: String
 )
