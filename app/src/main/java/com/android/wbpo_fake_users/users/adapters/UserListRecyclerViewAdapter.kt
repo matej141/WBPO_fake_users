@@ -9,7 +9,10 @@ import com.android.wbpo_fake_users.databinding.UserListItemBinding
 import com.android.wbpo_fake_users.users.retrofit.models.User
 import com.bumptech.glide.Glide
 
-class UserListRecyclerViewAdapter :
+class UserListRecyclerViewAdapter(
+    private val isUserFollowing: (Int) -> Boolean,
+    private val onFollowButtonClick: (Int) -> Unit,
+) :
     RecyclerView.Adapter<UserListRecyclerViewAdapter.UserViewHolder>() {
 
     private val users = mutableListOf<User>()
@@ -36,7 +39,7 @@ class UserListRecyclerViewAdapter :
         notifyDataSetChanged()
     }
 
-    class UserViewHolder(private val binding: UserListItemBinding) :
+    inner class UserViewHolder(private val binding: UserListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(user: User) {
             val nameSurnameText = "${user.firstName} ${user.lastName}"
@@ -46,6 +49,16 @@ class UserListRecyclerViewAdapter :
                 .load(user.avatar)
                 .placeholder(R.drawable.wbpo_logo)
                 .into(binding.avatarPicture)
+
+            val isFollowing = isUserFollowing(user.id)
+            binding.favoriteButton.setImageResource(
+                if (isFollowing) R.drawable.ic_favorite else R.drawable.ic_favorite_border
+            )
+
+            binding.favoriteButton.setOnClickListener {
+                onFollowButtonClick(user.id)
+                notifyItemChanged(adapterPosition)
+            }
         }
     }
 }

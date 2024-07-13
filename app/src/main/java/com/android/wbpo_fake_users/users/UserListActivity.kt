@@ -44,7 +44,11 @@ class UserListActivity : AppCompatActivity() {
     }
 
     private fun setupAdapter() {
-        adapter = UserListRecyclerViewAdapter()
+        adapter = UserListRecyclerViewAdapter(
+            isUserFollowing = { userId -> viewModel.isUserFollowing(userId) },
+            onFollowButtonClick = { userId -> viewModel.toggleFollowStatus(userId) }
+        )
+
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
 

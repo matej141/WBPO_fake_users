@@ -1,9 +1,9 @@
 package com.android.wbpo_fake_users.users
 
-import android.util.Log
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.wbpo_fake_users.ReqresApiInstance
 import com.android.wbpo_fake_users.users.retrofit.models.User
@@ -11,7 +11,7 @@ import com.android.wbpo_fake_users.users.retrofit.models.UserListResponse
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class UserListViewModel : ViewModel() {
+class UserListViewModel(application: Application) : AndroidViewModel(application) {
     private val _users = MutableLiveData<List<User>>()
     val users: LiveData<List<User>> get() = _users
 
@@ -23,6 +23,8 @@ class UserListViewModel : ViewModel() {
 
     private var currentPage = 1
     private var totalPages = 1
+
+    private val followStatusRepository = FollowStatusRepository(application)
 
     init {
         loadUsers(currentPage)
@@ -41,7 +43,6 @@ class UserListViewModel : ViewModel() {
                     val updatedUsers = _users.value.orEmpty().toMutableList().apply {
                         addAll(it.data)
                     }
-                    Log.d("USERSS", it.data.size.toString() + it.data.toString())
                     _users.value = updatedUsers
                 }
                 _error.value = null
@@ -56,5 +57,14 @@ class UserListViewModel : ViewModel() {
         if (!loading.value!! && currentPage < totalPages) {
             loadUsers(currentPage + 1)
         }
+    }
+
+    fun toggleFollowStatus(userId: Int) {
+        followStatusRepository.toggleFollowStatus(userId)
+        _users.value = _users.value
+    }
+
+    fun isUserFollowing(userId: Int): Boolean {
+        return followStatusRepository.isUserFollowing(userId)
     }
 }
